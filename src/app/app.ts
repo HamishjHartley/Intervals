@@ -1,9 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { FileGenerator } from './file-generator';
+import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {form, FormField} from '@angular/forms/signals'
 import {MatTableModule} from '@angular/material/table';
 
-interface LapData {
+export interface LapData {
   duration: number;
   power: number
 }
@@ -16,6 +17,8 @@ interface LapData {
 })
 export class App {
   protected readonly title = signal('interval');
+
+  private fileGenerator = inject(FileGenerator);
 
   intervalModel = signal<LapData>({duration: 0, power: 0}); // Creating form model
   intervalForm = form(this.intervalModel); // Creating a FieldTree
@@ -30,6 +33,10 @@ export class App {
     this.laps = [...this.laps, lap];
 
     console.log(lap);
+  }
+
+  createFIT(){
+    this.fileGenerator.downloadFile();
   }
 
 
