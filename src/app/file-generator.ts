@@ -1,6 +1,4 @@
-import { DeveloperDataIdMesg, FieldDescriptionMesg } from './../../node_modules/@garmin/fitsdk/src/types/mesgs.d';
 import { Service } from '@angular/core';
-import * as fs from "fs";
 import { Encoder, Profile, Utils } from "@garmin/fitsdk";
 import { LapData } from "./app";
 
