@@ -1,5 +1,4 @@
-import { FileGenerator } from './file-generator';
-import { MessageBuilder } from './message/message-builder';
+import { FileGenerator } from './file-generation/file-generator';
 import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {form, FormField} from '@angular/forms/signals'
@@ -33,11 +32,6 @@ export class App {
     const lap = this.intervalModel();
     this.laps = [...this.laps, lap];
 
-    console.log(lap);
-  }
-
-  createFIT(){
-    this.fileGenerator.createFIT(this.laps);
   }
 
 }

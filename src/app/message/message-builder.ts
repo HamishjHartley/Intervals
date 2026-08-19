@@ -1,4 +1,4 @@
-import { Activity, DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, Lap, Messages, Record, Session, TimerEvent } from './messages';
+import { Activity, DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, Lap, Messages, Record, Session, TimerEvent } from './message-fields';
 
 export class MessageBuilder {
 

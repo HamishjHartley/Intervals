@@ -1,18 +1,18 @@
 export interface DeveloperDataId {
-    msgNum: number;
-    applicationId: [];
+    mesgNum: number;
+    applicationId: any[];
     applicationVersion: number;
     developerDataIndex: number;
 };
 
 export interface DeveloperFieldDescr {
-    msgNum: number;
+    mesgNum: number;
     developerDataIndex: number;
     fieldDefinitionNumber: number;
-    fitBaseTypeId: Float32Array;
+    fitBaseTypeId: number;
     fieldName: string;
     units: string;
-    nativeMsgNum: number;
+    nativeMesgNum: number;
 };
 
 export interface FileId {
@@ -32,7 +32,7 @@ export interface DeviceInfo {
     productName: string;
     serialNumber: number;
     softwareVersion: number;
-    timeStamp: Date;
+    timestamp: Date;
 };
 
 export interface TimerEvent {
