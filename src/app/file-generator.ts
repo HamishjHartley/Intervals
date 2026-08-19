@@ -1,4 +1,3 @@
-
 import { DeveloperDataIdMesg, FieldDescriptionMesg } from './../../node_modules/@garmin/fitsdk/src/types/mesgs.d';
 import { Service } from '@angular/core';
 import * as fs from "fs";
@@ -9,7 +8,7 @@ import { LapData } from "./app";
 export class FileGenerator {
 
     // creates and populated messages array
-    createFIT() {
+    createFIT(lapData: LapData[]) {
         const POWER_KEY = 1;
         const twoPI = Math.PI * 2.0;
         const mesgs = [];
@@ -67,7 +66,7 @@ export class FileGenerator {
             timestamp: startTime,
         });
 
-        // SART Timer event
+        // START Timer event
         mesgs.push({
             mesgNum: Profile.MesgNum.EVENT,
             timestamp: startTime,
@@ -151,11 +150,9 @@ export class FileGenerator {
 
         // Close the encoder
         const uint8Array = encoder.close();
-        return uint8Array;
-    }
-
-    downloadFile() {
-        const data = new Uint8Array(this.createFIT()).buffer; // Forces a plain ArrayBuffer
+        
+        // Download File
+        const data = new Uint8Array(uint8Array).buffer; // Forces a plain ArrayBuffer
         const blob = new Blob([data], { type: 'application/octet-stream'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -163,6 +160,10 @@ export class FileGenerator {
         a.download = "Test FIT file.fit";
         a.click();
         URL.revokeObjectURL(url);
+    }
+
+    downloadFile() {
+
     }
 
 }

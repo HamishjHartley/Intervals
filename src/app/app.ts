@@ -36,8 +36,7 @@ export class App {
   }
 
   createFIT(){
-    this.fileGenerator.downloadFile();
+    this.fileGenerator.createFIT(this.laps);
   }
-
 
 }
