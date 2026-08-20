@@ -20,7 +20,7 @@ export interface FileId {
     type: string;
     manufacturer: string;
     product: number;
-    timeCreated: Date;
+    timeCreated: number;
     serialNumber: number;
 };
 
@@ -32,19 +32,19 @@ export interface DeviceInfo {
     productName: string;
     serialNumber: number;
     softwareVersion: number;
-    timestamp: Date;
+    timestamp: number;
 };
 
 export interface TimerEvent {
     mesgNum: number;
-    timestamp: Date;
+    timestamp: number;
     event: string;
     eventType: string;
 };
 
 export interface Record {
     mesgNum: number;
-    timestamp: Date;
+    timestamp: number;
     distance: number; 
     enhancedSpeed: number; 
     heartRate: number;
@@ -59,19 +59,19 @@ export interface Record {
 export interface Lap {
     mesgNum: number;
     messageIndex: number;
-    timestamp: Date;
-    startTime: Date;
-    totalElapsedTime: Date;
-    totalTimerTime: Date;
+    timestamp: number;
+    startTime: number;
+    totalElapsedTime: number;
+    totalTimerTime: number;
 };
 
 export interface Session {
     mesgNum: number;
     messageIndex: number;
-    timestamp: Date;
-    startTime: Date;
-    totalElapsedTime: Date;
-    totalTimerTime: Date
+    timestamp: number;
+    startTime: number;
+    totalElapsedTime: number;
+    totalTimerTime: number
     sport: string;
     subSport: string;
     firstLapIndex: number;
@@ -81,11 +81,16 @@ export interface Session {
 
 export interface Activity {
     mesgNum: number;
-    timestamp: Date; 
+    timestamp: number; 
     numSessions: number;
-    localTimestamp: Date;
-    totalTimerDate: Date;
+    localTimestamp: number;
+    totalTimerTime: number;
 };
+
+export interface MessageField {
+    messageField: [ DeveloperDataId | FileId | DeviceInfo | TimerEvent | Record | Lap | Activity | Session ];
+}
+
 
 export interface Messages {
     developerDataId?: DeveloperDataId;
@@ -98,3 +103,4 @@ export interface Messages {
     session: Session | {};
     activity: Activity | {};
 };
+

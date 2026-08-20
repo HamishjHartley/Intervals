@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FileGenerator } from './file-generator';
+import { FitService } from './fit-service';
 
-describe('FileGenerator', () => {
-  let service: FileGenerator;
+describe('FitServic', () => {
+  let service: FitService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(FileGenerator);
+    service = TestBed.inject(FitService);
   });
 
   it('should be created', () => {

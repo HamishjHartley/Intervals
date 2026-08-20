@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Service } from '@angular/core';
 import { Encoder} from "@garmin/fitsdk";
+import { DeveloperDataId, FileId, DeviceInfo, TimerEvent, Lap, Activity, Record } from '../message/message-fields';
 
-@Injectable()
-export class FileGenerator {
+@Service()
+export class FitService {
 
-    // messages param of type array for now
-    encodeMessages(messages: []): Uint8Array<ArrayBufferLike> {
+    // Fix messages type lol
+    encodeMessages(messages: (DeveloperDataId | FileId | DeviceInfo | TimerEvent | Record | Lap | Activity)[]): Uint8Array<ArrayBufferLike> {
         const encoder = new Encoder({ });
 
         messages.forEach((message) => {
