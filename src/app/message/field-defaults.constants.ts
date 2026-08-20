@@ -1,6 +1,7 @@
 import { Profile, Utils } from '@garmin/fitsdk';
 import { DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, TimerEvent, Record, Lap, Session, Activity } from './message-fields';
 
+// TODO: Expand field defaults to incldue 'Workout' types as well: (Workout, WorkoutStep)
 export const FIELD_DEFAULTS = {
   developerDataId: (): DeveloperDataId => ({
     mesgNum: Profile.MesgNum.DEVELOPER_DATA_ID,
@@ -19,9 +20,9 @@ export const FIELD_DEFAULTS = {
     nativeMesgNum: Profile.MesgNum.SESSION,
   }),
 
-  fileId: (startTime: number): FileId => ({
+  fileId: (startTime: number, type: string): FileId => ({
     mesgNum: Profile.MesgNum.FILE_ID,
-    type: 'activity',
+    type: type,
     manufacturer: 'development',
     product: 0,
     timeCreated: startTime,
@@ -88,6 +89,6 @@ export const FIELD_DEFAULTS = {
     numSessions: 1,
     localTimestamp: localTimestamp,
     totalTimerTime: totalTimerTime,
-  })
+  }),
 
 } as const;

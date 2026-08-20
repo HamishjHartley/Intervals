@@ -1,5 +1,5 @@
 import { Service } from '@angular/core';
-import { Activity, DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, Lap, MessageField, Record, Session, TimerEvent } from './message-fields';
+import { Activity, DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, Lap, ActivityMessageField, Record, Session, TimerEvent } from './message-fields';
 import { LapData } from '../app';
 import { Utils } from '@garmin/fitsdk';
 import { FIELD_DEFAULTS } from './field-defaults.constants';
@@ -27,8 +27,8 @@ export class MessageService {
         return this.createField(FIELD_DEFAULTS.developerFieldDescr(fieldName, units));
     }
 
-    private createFileId(startTime: number): FileId {
-        return this.createField(FIELD_DEFAULTS.fileId(startTime));
+    private createFileId(startTime: number, type: string): FileId {
+        return this.createField(FIELD_DEFAULTS.fileId(startTime, type));
     }
 
     private createDeviceInfo(startTime: number): DeviceInfo {
@@ -71,12 +71,12 @@ export class MessageService {
         this.localTimeStamp = this.timestamp + this.localTimeStampOffset;
     }
 
-    public createMessage(lapData: LapData[]): MessageField[] {
-        const messages: MessageField[] = [];
+    public createActivityMessage(lapData: LapData[]): ActivityMessageField[] {
+        const messages: ActivityMessageField[] = [];
         this.initializeTimes(lapData);
 
         messages.push(this.createDeveloperDataId());
-        messages.push(this.createFileId(this.startTime));
+        messages.push(this.createFileId(this.startTime, "activity"));
         messages.push(this.createDeviceInfo(this.startTime));
         messages.push(this.createTimerEvent(this.startTime, "start"));
         

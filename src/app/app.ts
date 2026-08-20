@@ -36,8 +36,8 @@ export class App {
 
   }
 
-  createFIT() {
-    const messages = this.messageService.createMessage(this.laps);
+  createActivityFIT() {
+    const messages = this.messageService.createActivityMessage(this.laps);
     const encodedMessages = this.fitService.encodeMessages(messages);
     this.fitService.downloadFile(encodedMessages);
   }

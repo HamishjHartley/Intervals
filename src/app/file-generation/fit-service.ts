@@ -1,11 +1,11 @@
 import { Service } from '@angular/core';
 import { Encoder} from "@garmin/fitsdk";
-import { MessageField } from '../message/message-fields';
+import { ActivityMessageField } from '../message/message-fields';
 
 @Service()
 export class FitService {
 
-    encodeMessages(messages: MessageField[]): Uint8Array<ArrayBufferLike> {
+    encodeMessages(messages: ActivityMessageField[]): Uint8Array<ArrayBufferLike> {
         const encoder = new Encoder({ });
 
         messages.forEach((message) => {

@@ -87,7 +87,45 @@ export interface Activity {
     totalTimerTime: number;
 };
 
-export type MessageField = DeveloperDataId | FileId | DeviceInfo | TimerEvent | Record | Lap | Activity;
+export interface Workout {
+    /*
+    sport: enum;
+    subSport?: enum;
+    capabilities: enum; 	// Workout capability flags
+    numValidSteps: uint16;	// Count of WorkoutStep messages belonging to this workout
+    wktName: string;	// Display name
+    poolLength: uint16;	// Only relevant for swim workouts
+    poolLengthUnit:enum; //Only relevant for swim workouts
+    */
+};
+
+export interface WorkoutStep {
+/*
+messageIndex	uint16	Step index — used by repeat steps to reference earlier steps
+wktStepName	string	Display name for the step
+durationType	enum	time, distance, open, repeatUntilStepsCmplt, etc.
+durationValue	uint32	Dynamic field — meaning depends on durationType (see below)
+targetType	enum	speed, heartRate, cadence, power, open, etc.
+targetValue	uint32	Dynamic field — meaning depends on targetType
+customTargetValueLow	uint32	Lower bound when using a custom (non-zone) target range
+customTargetValueHigh	uint32	Upper bound when using a custom target range
+intensity	enum	active, rest, warmup, cooldown, recovery, interval, other
+notes	string	Free-text notes
+equipment	enum	e.g. swim equipment
+exerciseCategory	uint16	For strength-training style steps
+exerciseName	uint16	Paired with exerciseCategory
+exerciseWeight	uint16	For strength-training style steps
+weightDisplayUnit	enum	Paired with exerciseWeight
+secondaryTargetType	enum	Optional second target dimension
+secondaryTargetValue	uint32	Dynamic, paired with secondaryTargetType
+secondaryCustomTargetValueLow	uint32	Paired with secondary target
+secondaryCustomTargetValueHigh	uint32	Paired with secondary target
+*/
+}
+
+export type ActivityMessageField = DeveloperDataId | FileId | DeviceInfo | TimerEvent | Record | Lap | Activity;
+
+export type WorkoutMessageField = FileId | Workout | WorkoutStep;
 
 export interface Messages {
     developerDataId?: DeveloperDataId;
