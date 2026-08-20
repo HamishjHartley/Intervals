@@ -49,9 +49,8 @@ export class MessageService {
     }
 
     // Main message creation logic - Time creation should be abstracted 
-    // Figure out how to represent a "Messages" array as a concrete type
-    createMessage(): (DeveloperDataId | FileId | DeviceInfo | TimerEvent | Record | Lap | Activity)[] {
-        const messages: (DeveloperDataId | FileId | DeviceInfo | TimerEvent | Record | Lap | Activity)[] = [];
+    createMessage(): MessageField[] {
+        const messages: MessageField[] = [];
         const now = new Date();
         const localTimestampOffset = now.getTimezoneOffset() * -60;
         const startTime = Utils.convertDateToDateTime(now);

@@ -87,10 +87,7 @@ export interface Activity {
     totalTimerTime: number;
 };
 
-export interface MessageField {
-    messageField: [ DeveloperDataId | FileId | DeviceInfo | TimerEvent | Record | Lap | Activity | Session ];
-}
-
+export type MessageField = DeveloperDataId | FileId | DeviceInfo | TimerEvent | Record | Lap | Activity;
 
 export interface Messages {
     developerDataId?: DeveloperDataId;

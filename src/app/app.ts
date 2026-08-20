@@ -25,7 +25,7 @@ export class App {
   intervalModel = signal<LapData>({duration: 0, power: 0}); // Creating form model
   intervalForm = form(this.intervalModel); // Creating a FieldTree
 
-  laps:LapData[] = []; // Array to store created laps
+  laps: LapData[] = []; // Array to store created laps
   lapSignal = signal(this.laps);
   columnsToDisplay = ['position', 'duration', 'power'];
 
