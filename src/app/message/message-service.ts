@@ -1,13 +1,21 @@
-import { Injectable, Service } from '@angular/core';
-import { Activity, DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, Lap, MessageField, Messages, Record, Session, TimerEvent } from './message-fields';
+import { Service } from '@angular/core';
+import { Activity, DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, Lap, MessageField, Record, Session, TimerEvent } from './message-fields';
 import { LapData } from '../app';
 import { Utils } from '@garmin/fitsdk';
 import { FIELD_DEFAULTS } from './field-defaults.constants';
 
 @Service()
 export class MessageService {
-
-    private createField<T extends Object>(defaults: T, overrides?: Partial<T>): T {
+    
+    private startTime: number = 0;
+    private timestamp: number = 0;
+    private lapTimeStamp: number = 0;
+    private totalElapsedTime: number = 0;
+    private totalTimerTime: number = 0;
+    private localTimeStampOffset: number = 0;
+    private localTimeStamp: number = 0;
+    
+    private createField<MessageField>(defaults: MessageField, overrides?: Partial<MessageField>): MessageField {
         return {...defaults, ...overrides};
     }
 
@@ -48,63 +56,48 @@ export class MessageService {
         return this.createField(FIELD_DEFAULTS.activity(timestamp, localTimestamp, totalTimerTime));
     }
 
-    // Creates all of the required timing variables
-    private createTimings(lapData: LapData[]) {
-        const now = new Date();
-        const localTimestampOffset = now.getTimezoneOffset() * -60;
-        const startTime = Utils.convertDateToDateTime(now);
-
-
+    private initializeTimes(lapData: LapData[]) {
+        const now = new Date(Date.now() - 60 * 60 * 1000); // 60 mins ago - for debugging purposes on strava so activity is visible
+        this.localTimeStampOffset = now.getTimezoneOffset() * -60;
+        
+        this.startTime = Utils.convertDateToDateTime(now);
+        this.timestamp = this.startTime;
+        this.lapTimeStamp = this.startTime;
+        lapData.forEach(element => {
+            this.totalElapsedTime = this.totalElapsedTime + element.duration
+        });
+        this.totalTimerTime = this.totalElapsedTime;
+        this.localTimeStampOffset = now.getTimezoneOffset() * -60;
+        this.localTimeStamp = this.timestamp + this.localTimeStampOffset;
     }
 
-
-    // Main message creation logic - Time creation should be abstracted 
-    createMessage(lapData: LapData[]): MessageField[] {
+    public createMessage(lapData: LapData[]): MessageField[] {
         const messages: MessageField[] = [];
-        const now = new Date();
-        const localTimestampOffset = now.getTimezoneOffset() * -60;
-        const startTime = Utils.convertDateToDateTime(now);
+        this.initializeTimes(lapData);
 
         messages.push(this.createDeveloperDataId());
-        messages.push(this.createFileId(startTime));
-        messages.push(this.createDeviceInfo(startTime));
-        messages.push(this.createTimerEvent(startTime, "start"));
+        messages.push(this.createFileId(this.startTime));
+        messages.push(this.createDeviceInfo(this.startTime));
+        messages.push(this.createTimerEvent(this.startTime, "start"));
         
-        let timestamp = startTime;
-
-        let totalElapsedTime = 0;
-        lapData.forEach(element => {
-            totalElapsedTime = totalElapsedTime + element.duration
-        });
-        let totalTimerTime = totalElapsedTime;
-
-        // Record loop - Abstract to method?
-        for (let i=0; i <= totalElapsedTime; i++) {
-            messages.push(this.createRecord(timestamp, i));
-
-            timestamp++;
+        // Record loop 
+        for (let i=0; i <= this.totalElapsedTime; i++) {
+            messages.push(this.createRecord(this.timestamp, i));
+            this.timestamp++;
         }
-        messages.push(this.createTimerEvent(timestamp, "stop"));
+        messages.push(this.createTimerEvent(this.timestamp, "stop"));
 
-
-        let lapTimestamp = startTime; // separate lap timestamp
-
-        for (let i=0; i< lapData.length; i++) {
-            messages.push(this.createLap(i, lapTimestamp, lapTimestamp, lapData[i].duration, lapData[i].duration));
-            console.log("Adding", lapData[i].duration, "to lap time stamp:", lapTimestamp, "=");
-            lapTimestamp = lapTimestamp + lapData[i].duration;
-            console.log(lapTimestamp);
-        }
+        // Lap loop
+        lapData.forEach((lap, i) => {
+            messages.push(this.createLap(i, this.lapTimeStamp, this.lapTimeStamp, lap.duration, lap.duration));
+            this.lapTimeStamp = this.lapTimeStamp + lap.duration;
+        })
 
         // Too many parameters, hard coding sport type as well
         let numLaps = 1;
-        messages.push(this.createSession(startTime, timestamp, totalElapsedTime, totalTimerTime, numLaps, "cycling", "generic"));
-
-        let localTimestamp = timestamp + localTimestampOffset;
-        messages.push(this.createActivity(timestamp, localTimestamp, totalTimerTime));
-
-        console.log(messages);
-
+        messages.push(this.createSession(this.startTime, this.timestamp, this.totalElapsedTime, this.totalTimerTime, numLaps, "cycling", "generic"));
+        messages.push(this.createActivity(this.timestamp, this.localTimeStamp, this.totalTimerTime));
+        
         return messages;
     }
 

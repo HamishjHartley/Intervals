@@ -1,5 +1,6 @@
 import { Activity, DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, Lap, Messages, Record, Session, TimerEvent } from './message-fields';
 
+// TODO: Remove - unused
 export class MessageBuilder {
 
     private config: Partial<Messages> = {}

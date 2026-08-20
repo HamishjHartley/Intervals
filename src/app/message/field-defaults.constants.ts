@@ -56,7 +56,7 @@ export const FIELD_DEFAULTS = {
     cadence: i % 255, // Sawtooth
     power: (i % 255) < 127 ? 150 : 250, // Square
     enhancedAltitude: Math.abs((i % 255) - 127), // Triangle
-    positionLat: 0, // Flat Line
+    positionLat: (Math.sin(Math.PI * 2.0 * (0.01 * i + 10)) + 1.0) * 5000.0, // Flat Line
     positionLong: i * 107.173, // Ramp
   }),
 
