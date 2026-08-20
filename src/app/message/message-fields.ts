@@ -1,6 +1,6 @@
 export interface DeveloperDataId {
     mesgNum: number;
-    applicationId: any[];
+    applicationId: any[]; // Establish concrete type!
     applicationVersion: number;
     developerDataIndex: number;
 };

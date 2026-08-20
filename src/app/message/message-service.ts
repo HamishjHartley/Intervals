@@ -36,8 +36,8 @@ export class MessageService {
         return this.createField(FIELD_DEFAULTS.record(timestamp, i));
     }
 
-    private createLap(timestamp: number, startTime: number, totalElapsedTime: number, totalTimerTime: number): Lap {
-        return this.createField(FIELD_DEFAULTS.lap(timestamp, startTime, totalElapsedTime, totalTimerTime));
+    private createLap(messageIndex: number, timestamp: number, startTime: number, totalElapsedTime: number, totalTimerTime: number): Lap {
+        return this.createField(FIELD_DEFAULTS.lap(messageIndex, timestamp, startTime, totalElapsedTime, totalTimerTime));
     }
 
     private createSession(startTime: number, timestamp: number, totalElapsedTime: number, totalTimerTime: number, numLaps: number, sport: string, subSport: string): Session {
@@ -48,8 +48,18 @@ export class MessageService {
         return this.createField(FIELD_DEFAULTS.activity(timestamp, localTimestamp, totalTimerTime));
     }
 
+    // Creates all of the required timing variables
+    private createTimings(lapData: LapData[]) {
+        const now = new Date();
+        const localTimestampOffset = now.getTimezoneOffset() * -60;
+        const startTime = Utils.convertDateToDateTime(now);
+
+
+    }
+
+
     // Main message creation logic - Time creation should be abstracted 
-    createMessage(): MessageField[] {
+    createMessage(lapData: LapData[]): MessageField[] {
         const messages: MessageField[] = [];
         const now = new Date();
         const localTimestampOffset = now.getTimezoneOffset() * -60;
@@ -61,19 +71,31 @@ export class MessageService {
         messages.push(this.createTimerEvent(startTime, "start"));
         
         let timestamp = startTime;
+
+        let totalElapsedTime = 0;
+        lapData.forEach(element => {
+            totalElapsedTime = totalElapsedTime + element.duration
+        });
+        let totalTimerTime = totalElapsedTime;
+
         // Record loop - Abstract to method?
-        for (let i=0; i <= 4; i++) {
+        for (let i=0; i <= totalElapsedTime; i++) {
             messages.push(this.createRecord(timestamp, i));
 
             timestamp++;
         }
         messages.push(this.createTimerEvent(timestamp, "stop"));
 
-        // Lap creation - Abstract to method? 
-        let totalElapsedTime = timestamp - startTime;
-        let totalTimerTime = timestamp - startTime;
-        messages.push(this.createLap(timestamp, startTime, totalElapsedTime, totalTimerTime));
-        
+
+        let lapTimestamp = startTime; // separate lap timestamp
+
+        for (let i=0; i< lapData.length; i++) {
+            messages.push(this.createLap(i, lapTimestamp, lapTimestamp, lapData[i].duration, lapData[i].duration));
+            console.log("Adding", lapData[i].duration, "to lap time stamp:", lapTimestamp, "=");
+            lapTimestamp = lapTimestamp + lapData[i].duration;
+            console.log(lapTimestamp);
+        }
+
         // Too many parameters, hard coding sport type as well
         let numLaps = 1;
         messages.push(this.createSession(startTime, timestamp, totalElapsedTime, totalTimerTime, numLaps, "cycling", "generic"));

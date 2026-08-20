@@ -46,6 +46,7 @@ export const FIELD_DEFAULTS = {
     eventType: eventType,
   }),
 
+  // TODO: Remove this hardcoded logic
   record: (timestamp: number, i: number): Record => ({
     mesgNum: Profile.MesgNum.RECORD,
     timestamp: timestamp,
@@ -59,9 +60,9 @@ export const FIELD_DEFAULTS = {
     positionLong: i * 107.173, // Ramp
   }),
 
-  lap: (timestamp: number, startTime: number, totalElapsedTime: number, totalTimerTime: number): Lap => ({
+  lap: (messageIndex: number, timestamp: number, startTime: number, totalElapsedTime: number, totalTimerTime: number): Lap => ({
     mesgNum: Profile.MesgNum.LAP,
-    messageIndex: 0,
+    messageIndex: messageIndex,
     timestamp: timestamp,
     startTime: startTime,
     totalElapsedTime: totalElapsedTime,
