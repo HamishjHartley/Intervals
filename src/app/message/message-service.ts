@@ -1,8 +1,9 @@
 import { Service } from '@angular/core';
-import { Activity, DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, Lap, ActivityMessageField, Record, Session, TimerEvent, WorkoutMessageField, Workout, WorkoutSession, WorkoutStep } from './message-fields';
-import { LapData } from '../app';
+import { Activity, DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, Lap, ActivityMessageField, Record, Session, TimerEvent, WorkoutMessageField, Workout, WorkoutSession, WorkoutStep, ZonesTarget } from './message-fields';
+import { FitnessData, LapData } from '../app';
 import { Types, Utils } from '@garmin/fitsdk';
 import { FIELD_DEFAULTS } from './field-defaults.constants';
+import { tap} from 'rxjs';
 
 @Service()
 export class MessageService {
@@ -60,12 +61,16 @@ export class MessageService {
         return this.createField(FIELD_DEFAULTS.workout(sport, capabilities, numValidSteps, wktName));
     }
 
-    private createWorkoutStep(messageIndex: Types.MessageIndex, wktStepName: string, durationType: Types.WktStepDuration, durationTime: Types.Float64, targetType: Types.WktStepTarget, intensity: Types.Intensity): WorkoutStep {
-        return this.createField(FIELD_DEFAULTS.WorkoutStep(messageIndex, wktStepName, durationType, durationTime, targetType, intensity));
+    private createWorkoutStep(messageIndex: Types.MessageIndex, wktStepName: string, durationType: Types.WktStepDuration, durationTime: Types.Float64, targetPowerZone: Types.Uint32,  targetType: Types.WktStepTarget, intensity: Types.Intensity): WorkoutStep {
+        return this.createField(FIELD_DEFAULTS.WorkoutStep(messageIndex, wktStepName, durationType, durationTime, targetPowerZone, targetType, intensity));
     }
 
     private createWorkoutSession(messageIndex: Types.MessageIndex, sport: Types.Sport, numValidSteps: number, firstStepIndex: number): WorkoutSession {
         return this.createField(FIELD_DEFAULTS.workoutSession(messageIndex, sport, numValidSteps, firstStepIndex));
+    }
+
+    private createZonesTarget(maxHeartRate: Types.Uint8, thresholdHeartRate: Types.Uint8, functionalThresholdPower: Types.Uint16, hrCalcType:Types.HrZoneCalc, pwrCalcType: Types.PwrZoneCalc): ZonesTarget {
+        return this.createField(FIELD_DEFAULTS.ZonesTarget(maxHeartRate, thresholdHeartRate, functionalThresholdPower, hrCalcType, pwrCalcType));
     }
 
     private initializeTimes(lapData: LapData[]) {
@@ -83,21 +88,22 @@ export class MessageService {
         this.localTimeStamp = this.timestamp + this.localTimeStampOffset;
     }
 
-    public createWorkoutMessage(lapData: LapData[]): WorkoutMessageField[] {
+    public createWorkoutMessage(lapData: LapData[], fitnessData: FitnessData): WorkoutMessageField[] {
         const messages: WorkoutMessageField[] = [];
-        this.initializeTimes(lapData);
         const numValidSteps = lapData.length;
         const workoutName = "My workout"
+        this.initializeTimes(lapData);
 
         messages.push(this.createFileId(this.startTime, "workout"));
+        messages.push(this.createZonesTarget(fitnessData.maxHr, fitnessData.thresholdHr, fitnessData.ftp, "percentMaxHr", "percentFtp")); // Define training zones 
         messages.push(this.createWorkout("cycling", 0, numValidSteps, workoutName));
 
         // Adding each lap
         lapData.forEach((lap, i) => {
-            messages.push(this.createWorkoutStep(i, "Step:" + i.toString(), "time", lap.duration, "power", "active"));
+            console.log(this.createWorkoutStep(i, "Step:" + i.toString(), "time", lap.duration, lap.powerZone,"power", "active"));
+            messages.push(this.createWorkoutStep(i, "Step:" + i.toString(), "time", lap.duration, lap.powerZone,"power", "active"));
         })
         
-        console.log(messages);
         return messages;
     }
 

@@ -188,9 +188,18 @@ export interface WorkoutStep {
     secondaryCustomTargetPowerHigh?: Types.WorkoutPower;
 };
 
+export interface ZonesTarget {
+    mesgNum: number;
+    maxHeartRate?: Types.Uint8;
+    thresholdHeartRate?: Types.Uint8;
+    functionalThresholdPower?: Types.Uint16;
+    hrCalcType?: Types.HrZoneCalc;
+    pwrCalcType?: Types.PwrZoneCalc;
+}
+
 export type ActivityMessageField = DeveloperDataId | FileId | DeviceInfo | TimerEvent | Record | Lap | Activity;
 
-export type WorkoutMessageField = FileId | Workout | WorkoutSession | WorkoutStep;
+export type WorkoutMessageField = FileId | Workout | WorkoutSession | WorkoutStep | ZonesTarget;
 
 export interface Messages {
     developerDataId?: DeveloperDataId;

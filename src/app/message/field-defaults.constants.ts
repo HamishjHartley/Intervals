@@ -1,5 +1,5 @@
 import { Profile, Types, Utils } from '@garmin/fitsdk';
-import { DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, TimerEvent, Record, Lap, Session, Activity, Workout, WorkoutSession, WorkoutStep } from './message-fields';
+import { DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, TimerEvent, Record, Lap, Session, Activity, Workout, WorkoutSession, WorkoutStep, ZonesTarget } from './message-fields';
 
 export const FIELD_DEFAULTS = {
     // -- ACTIVITY RELATED CONFIGURATION --
@@ -109,12 +109,24 @@ export const FIELD_DEFAULTS = {
     firstStepIndex: firstStepIndex,
   }),
 
-  WorkoutStep: (messageIndex: Types.MessageIndex, wktStepName: string, durationType: Types.WktStepDuration, durationTime: Types.Float64, targetType: Types.WktStepTarget, intensity: Types.Intensity): WorkoutStep => ({
+  WorkoutStep: (messageIndex: Types.MessageIndex, wktStepName: string, durationType: Types.WktStepDuration, durationTime: Types.Float64, targetPowerZone: Types.Uint32,  targetType: Types.WktStepTarget, intensity: Types.Intensity): WorkoutStep => ({
     mesgNum: Profile.MesgNum.WORKOUT_STEP,
     messageIndex: messageIndex,
     wktStepName: wktStepName,
     durationType: durationType,
     durationTime: durationTime,
+    targetPowerZone: targetPowerZone,
+    targetType: targetType,
+    intensity: intensity,
+  }),
+
+  ZonesTarget: (maxHeartRate: Types.Uint8, thresholdHeartRate: Types.Uint8, functionalThresholdPower: Types.Uint16, hrCalcType:Types.HrZoneCalc, pwrCalcType: Types.PwrZoneCalc): ZonesTarget => ({
+    mesgNum: Profile.MesgNum.ZONES_TARGET,
+    maxHeartRate: maxHeartRate,
+    thresholdHeartRate: thresholdHeartRate,
+    functionalThresholdPower: functionalThresholdPower,
+    hrCalcType: hrCalcType,
+    pwrCalcType: pwrCalcType,
   }),
 
 } as const;
