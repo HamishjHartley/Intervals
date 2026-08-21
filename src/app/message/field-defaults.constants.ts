@@ -1,8 +1,8 @@
-import { Profile, Utils } from '@garmin/fitsdk';
-import { DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, TimerEvent, Record, Lap, Session, Activity } from './message-fields';
+import { Profile, Types, Utils } from '@garmin/fitsdk';
+import { DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, TimerEvent, Record, Lap, Session, Activity, Workout, WorkoutSession, WorkoutStep } from './message-fields';
 
-// TODO: Expand field defaults to incldue 'Workout' types as well: (Workout, WorkoutStep)
 export const FIELD_DEFAULTS = {
+    // -- ACTIVITY RELATED CONFIGURATION --
   developerDataId: (): DeveloperDataId => ({
     mesgNum: Profile.MesgNum.DEVELOPER_DATA_ID,
     applicationId: Array(16).fill(0),
@@ -89,6 +89,32 @@ export const FIELD_DEFAULTS = {
     numSessions: 1,
     localTimestamp: localTimestamp,
     totalTimerTime: totalTimerTime,
+  }),
+
+  // -- WORKOUT RELATED CONFIGURATION --
+  // Not including all fields in default configuration - For now
+  workout: (sport: Types.Sport, capabilities: Types.WorkoutCapabilities, numValidSteps: Types.Uint16, wktName: string): Workout => ({
+    mesgNum: Profile.MesgNum.WORKOUT,
+    sport: sport,
+    capabilities: capabilities,
+    numValidSteps: numValidSteps,
+    wktName: wktName,
+  }),
+
+  workoutSession: (messageIndex: Types.MessageIndex, sport: Types.Sport, numValidSteps: number, firstStepIndex: number): WorkoutSession => ({
+    mesgNum: Profile.MesgNum.WORKOUT_SESSION,
+    messageIndex: messageIndex,
+    sport: sport,
+    numValidSteps: numValidSteps,
+    firstStepIndex: firstStepIndex,
+  }),
+
+  WorkoutStep: (messageIndex: Types.MessageIndex, wktStepName: string, durationType: Types.WktStepDuration, durationTime: Types.Float64, targetType: Types.WktStepTarget, intensity: Types.Intensity): WorkoutStep => ({
+    mesgNum: Profile.MesgNum.WORKOUT_STEP,
+    messageIndex: messageIndex,
+    wktStepName: wktStepName,
+    durationType: durationType,
+    durationTime: durationTime,
   }),
 
 } as const;

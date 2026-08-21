@@ -42,5 +42,11 @@ export class App {
     this.fitService.downloadFile(encodedMessages);
   }
 
+  createWorkoutFIT() {
+    const messages = this.messageService.createWorkoutMessage(this.laps);
+    const encodedMessages = this.fitService.encodeMessages(messages);
+    this.fitService.downloadFile(encodedMessages);
+  }
+
 
 }

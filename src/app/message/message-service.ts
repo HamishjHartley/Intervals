@@ -1,7 +1,7 @@
 import { Service } from '@angular/core';
-import { Activity, DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, Lap, ActivityMessageField, Record, Session, TimerEvent } from './message-fields';
+import { Activity, DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, Lap, ActivityMessageField, Record, Session, TimerEvent, WorkoutMessageField, Workout, WorkoutSession, WorkoutStep } from './message-fields';
 import { LapData } from '../app';
-import { Utils } from '@garmin/fitsdk';
+import { Types, Utils } from '@garmin/fitsdk';
 import { FIELD_DEFAULTS } from './field-defaults.constants';
 
 @Service()
@@ -56,6 +56,18 @@ export class MessageService {
         return this.createField(FIELD_DEFAULTS.activity(timestamp, localTimestamp, totalTimerTime));
     }
 
+    private createWorkout(sport: Types.Sport, capabilities: Types.WorkoutCapabilities, numValidSteps: Types.Uint16, wktName: string): Workout {
+        return this.createField(FIELD_DEFAULTS.workout(sport, capabilities, numValidSteps, wktName));
+    }
+
+    private createWorkoutStep(messageIndex: Types.MessageIndex, wktStepName: string, durationType: Types.WktStepDuration, durationTime: Types.Float64, targetType: Types.WktStepTarget, intensity: Types.Intensity): WorkoutStep {
+        return this.createField(FIELD_DEFAULTS.WorkoutStep(messageIndex, wktStepName, durationType, durationTime, targetType, intensity));
+    }
+
+    private createWorkoutSession(messageIndex: Types.MessageIndex, sport: Types.Sport, numValidSteps: number, firstStepIndex: number): WorkoutSession {
+        return this.createField(FIELD_DEFAULTS.workoutSession(messageIndex, sport, numValidSteps, firstStepIndex));
+    }
+
     private initializeTimes(lapData: LapData[]) {
         const now = new Date(Date.now() - 60 * 60 * 1000); // 60 mins ago - for debugging purposes on strava so activity is visible
         this.localTimeStampOffset = now.getTimezoneOffset() * -60;
@@ -69,6 +81,24 @@ export class MessageService {
         this.totalTimerTime = this.totalElapsedTime;
         this.localTimeStampOffset = now.getTimezoneOffset() * -60;
         this.localTimeStamp = this.timestamp + this.localTimeStampOffset;
+    }
+
+    public createWorkoutMessage(lapData: LapData[]): WorkoutMessageField[] {
+        const messages: WorkoutMessageField[] = [];
+        this.initializeTimes(lapData);
+        const numValidSteps = lapData.length;
+        const workoutName = "My workout"
+
+        messages.push(this.createFileId(this.startTime, "workout"));
+        messages.push(this.createWorkout("cycling", 0, numValidSteps, workoutName));
+
+        // Adding each lap
+        lapData.forEach((lap, i) => {
+            messages.push(this.createWorkoutStep(i, "Step:" + i.toString(), "time", lap.duration, "power", "active"));
+        })
+        
+        console.log(messages);
+        return messages;
     }
 
     public createActivityMessage(lapData: LapData[]): ActivityMessageField[] {
