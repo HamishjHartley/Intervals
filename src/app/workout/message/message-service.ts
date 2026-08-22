@@ -3,7 +3,6 @@ import { Activity, DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, Lap
 import { FitnessData, LapData } from '../workout-creation/workout-creation';
 import { Types, Utils } from '@garmin/fitsdk';
 import { FIELD_DEFAULTS } from './field-defaults.constants';
-import { tap} from 'rxjs';
 
 @Service()
 export class MessageService {
@@ -100,7 +99,6 @@ export class MessageService {
 
         // Adding each lap
         lapData.forEach((lap, i) => {
-            console.log(this.createWorkoutStep(i, "Step:" + i.toString(), "time", lap.duration, lap.powerZone,"power", "active"));
             messages.push(this.createWorkoutStep(i, "Step:" + i.toString(), "time", lap.duration, lap.powerZone,"power", "active"));
         })
         

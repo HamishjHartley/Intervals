@@ -5,7 +5,6 @@ import { Service, signal } from '@angular/core';
 export class ConfigService {
 
     private _fitnessData = signal<FitnessData>({ftp:0, thresholdHr:0, maxHr:0});
-
     readonly fitnessData = this._fitnessData.asReadonly();
     
     updateFitness(data: FitnessData) {
