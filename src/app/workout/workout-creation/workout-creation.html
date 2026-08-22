@@ -1,1 +1,38 @@
-<p>workout-creation works!</p>
+<main class="main">
+  <form (submit)="addLap($event)">
+    <label>
+      Duration
+      <input type="number" [formField]="intervalForm.duration" />
+    </label>
+
+    <label>
+      Power
+      <input type="number" [formField]="intervalForm.powerZone" />
+    </label>
+
+    <button type="submit">Add Lap</button>
+  </form>
+
+  <table mat-table [dataSource]="laps">
+    <ng-container matColumnDef="position">
+      <th mat-header-cell *matHeaderCellDef>Lap No.</th>
+      <td mat-cell *matCellDef="let lap; let i = index">{{ i + 1 }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef>Duration</th>
+      <td mat-cell *matCellDef="let lap">{{lap.duration}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="power">
+      <th mat-header-cell *matHeaderCellDef>Power</th>
+      <td mat-cell *matCellDef="let lap">{{lap.powerZone}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
+  </table>
+
+  <button (click)="createWorkoutFIT()">Create FIT File</button>
+</main>
+

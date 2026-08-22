@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { RouterLink, Router } from "@angular/router";
 
 @Component({
   selector: 'app-landing-page',
@@ -6,4 +7,11 @@ import { Component } from '@angular/core';
   templateUrl: './landing-page.html',
   styleUrl: './landing-page.css',
 })
-export class LandingPage {}
+export class LandingPage {
+  private router = inject(Router);
+
+  navigateToWizard() {
+    this.router.navigate(['/fitness-wizard']);
+  }
+
+}

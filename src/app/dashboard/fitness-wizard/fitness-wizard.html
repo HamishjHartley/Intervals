@@ -1,1 +1,20 @@
-<p>fitness-wizard works!</p>
+<h1>Fitness Wizard</h1>
+
+  <form (submit)="setFitnessData($event)">
+    <label>
+      Functional Threshold Power - FTP (W)
+      <input type="number" [formField]="fitnessForm.ftp" />
+    </label>
+
+    <label>
+      Max Heart rate (BPM)
+      <input type="number" [formField]="fitnessForm.maxHr" />
+    </label>
+
+    <label>
+      Threshold Heart rate (BPM)
+      <input type="number" [formField]="fitnessForm.thresholdHr" />
+    </label>
+
+    <button type="submit">Set fitness</button>
+  </form>
