@@ -1,6 +1,6 @@
 import { Service } from '@angular/core';
 import { Activity, DeveloperDataId, DeveloperFieldDescr, DeviceInfo, FileId, Lap, ActivityMessageField, Record, Session, TimerEvent, WorkoutMessageField, Workout, WorkoutSession, WorkoutStep, ZonesTarget } from './message-fields';
-import { FitnessData, LapData } from '../app';
+import { FitnessData, LapData } from '../../app';
 import { Types, Utils } from '@garmin/fitsdk';
 import { FIELD_DEFAULTS } from './field-defaults.constants';
 import { tap} from 'rxjs';

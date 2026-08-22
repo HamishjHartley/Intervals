@@ -1,5 +1,5 @@
-import { MessageService } from './message/message-service';
-import { FitService } from './file-generation/fit-service';
+import { MessageService } from './workout/message/message-service';
+import { FitService } from './workout/file-generation/fit-service';
 import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {form, FormField} from '@angular/forms/signals'
